@@ -1,0 +1,8 @@
+{
+  "name": "RedEx Hub",
+  "description": "A clean application to find fuel stations, check amenities, order petrol/diesel, and pay using various options. Features a minimal white background and high-contrast red buttons.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": []
+}
