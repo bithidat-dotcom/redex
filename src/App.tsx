@@ -116,67 +116,25 @@ interface Station {
   lng: number;
   amenities: AmenityType[];
   fuels: FuelDetail[];
+  image: string;
 }
 
 // --- MOCK DATA ---
 const INITIAL_STATIONS: Station[] = [
-  // Keeping station data intact...
-  {
-    id: 's1',
-    name: "A. Rahman & Son's",
-    address: 'Bhola, Barishal',
-    distance: '1.2 km away',
-    lat: 22.6854,
-    lng: 90.6480,
-    amenities: ['Convenience Store', 'Air Station', 'Restroom'],
-    fuels: [
-      { type: 'Petrol', pricePerLiter: 125, available: true },
-      { type: 'Diesel', pricePerLiter: 109, available: true },
-      { type: 'EV Wireless', pricePerLiter: 22, available: true }
-    ]
-  },
-  {
-    id: 's2',
-    name: 'Ms Saudia Filling Station',
-    address: 'Bhola Road, Barishal',
-    distance: '3.5 km away',
-    lat: 22.6950,
-    lng: 90.6500,
-    amenities: ['Car Wash', 'Convenience Store', 'Restroom', 'ATM'],
-    fuels: [
-      { type: 'Petrol', pricePerLiter: 125, available: true },
-      { type: 'Diesel', pricePerLiter: 109, available: false },
-      { type: 'EV Wireless', pricePerLiter: 20, available: true }
-    ]
-  },
-  {
-    id: 's3',
-    name: 'West Petrol Station',
-    address: 'City Center, Barishal',
-    distance: '5.0 km away',
-    lat: 22.7010,
-    lng: 90.3533,
-    amenities: ['Air Station', 'Convenience Store'],
-    fuels: [
-      { type: 'Petrol', pricePerLiter: 125, available: true },
-      { type: 'Diesel', pricePerLiter: 109, available: true },
-      { type: 'EV Wireless', pricePerLiter: 22, available: true }
-    ]
-  },
-  {
-    id: 's4',
-    name: 'MH Filling Station (Meghna)',
-    address: 'Sadar, Bhola, Barishal',
-    distance: '7.8 km away',
-    lat: 22.6800,
-    lng: 90.6400,
-    amenities: ['ATM', 'Car Wash', 'Restroom'],
-    fuels: [
-      { type: 'Petrol', pricePerLiter: 125, available: true },
-      { type: 'Diesel', pricePerLiter: 109, available: true },
-      { type: 'EV Wireless', pricePerLiter: 24, available: true }
-    ]
-  }
+  { id: 's1', name: "A. Rahman & Son's", address: 'Charfassion- Bhola Hwy', distance: '1.2 km', lat: 22.6854, lng: 90.6480, amenities: ['Convenience Store', 'Restroom'], fuels: [{ type: 'Petrol', pricePerLiter: 125, available: true }], image: 'https://picsum.photos/seed/a-rahman/400/300' },
+  { id: 's2', name: 'Ms Saudia Filling Station', address: 'Burhanuddin - Lalmohon Rd', distance: '3.5 km', lat: 22.6950, lng: 90.6500, amenities: ['ATM'], fuels: [{ type: 'Petrol', pricePerLiter: 125, available: true }], image: 'https://picsum.photos/seed/s2/400/300' },
+  { id: 's3', name: 'MS Saaudia Filling Station', address: 'Burhanuddin - Lalmohon Rd', distance: '4.2 km', lat: 22.6970, lng: 90.6510, amenities: ['Restroom'], fuels: [{ type: 'Petrol', pricePerLiter: 126, available: true }], image: 'https://picsum.photos/seed/s3/400/300' },
+  { id: 's4', name: 'পিওর অয়েল স্টোর', address: 'Char Fasson', distance: '6.5 km', lat: 22.670, lng: 90.630, amenities: ['Convenience Store'], fuels: [{ type: 'Diesel', pricePerLiter: 110, available: true }], image: 'https://picsum.photos/seed/s4/400/300' },
+  { id: 's5', name: 'এন মোহাম্মদ ফিলিং স্টেশন', address: 'Lalmohan - Char Fasson Rd', distance: '4.8 km', lat: 22.690, lng: 90.660, amenities: ['ATM', 'Restroom'], fuels: [{ type: 'Petrol', pricePerLiter: 125, available: true }], image: 'https://picsum.photos/seed/s5/400/300' },
+  { id: 's6', name: 'BHAI BHAI STOR', address: 'Thana Road', distance: '2.1 km', lat: 22.682, lng: 90.645, amenities: [], fuels: [{ type: 'Petrol', pricePerLiter: 124, available: true }], image: 'https://picsum.photos/seed/s6/400/300' },
+  { id: 's7', name: 'উম্মাহ ট্রেডার্স', address: 'Burhanuddin', distance: '5.3 km', lat: 22.698, lng: 90.655, amenities: ['Restroom'], fuels: [{ type: 'Petrol', pricePerLiter: 125, available: true }], image: 'https://picsum.photos/seed/s7/400/300' },
+  { id: 's8', name: 'MS Brothers Filling Station', address: 'Charfasson Sadar', distance: '8.1 km', lat: 22.660, lng: 90.620, amenities: ['Car Wash'], fuels: [{ type: 'Diesel', pricePerLiter: 108, available: true }], image: 'https://picsum.photos/seed/s8/400/300' },
+  { id: 's9', name: 'Pk.Black.Vai', address: 'Char Annadaprasad', distance: '3.9 km', lat: 22.675, lng: 90.640, amenities: [], fuels: [{ type: 'Petrol', pricePerLiter: 125, available: true }], image: 'https://picsum.photos/seed/s9/400/300' },
+  { id: 's10', name: 'Sundarban Gas Company', address: 'Bhola Industrial Area', distance: '2.5 km', lat: 22.688, lng: 90.642, amenities: [], fuels: [{ type: 'EV Wireless', pricePerLiter: 22, available: true }], image: 'https://picsum.photos/seed/s10/400/300' },
+  { id: 's11', name: 'মোল্লা পট্টি', address: 'Bhola', distance: '1.5 km', lat: 22.683, lng: 90.643, amenities: [], fuels: [{ type: 'Petrol', pricePerLiter: 125, available: true }], image: 'https://picsum.photos/seed/s11/400/300' },
+  { id: 's12', name: 'হাওলাদার হার্ডওয়্যার এন্ড অয়েল', address: 'Charfassion- Bhola Hwy', distance: '7.2 km', lat: 22.665, lng: 90.630, amenities: [], fuels: [{ type: 'Petrol', pricePerLiter: 125, available: true }], image: 'https://picsum.photos/seed/s12/400/300' },
+  { id: 's13', name: 'যমুনা', address: 'Charfassion- Bhola Hwy', distance: '8.5 km', lat: 22.655, lng: 90.615, amenities: ['Restroom'], fuels: [{ type: 'Petrol', pricePerLiter: 125, available: true }], image: 'https://picsum.photos/seed/s13/400/300' },
+  { id: 's14', name: 'N. Mohammad Filling Station', address: 'Charfassion- Bhola Hwy', distance: '6.9 km', lat: 22.670, lng: 90.635, amenities: [], fuels: [{ type: 'Petrol', pricePerLiter: 125, available: false }], image: 'https://picsum.photos/seed/s14/400/300' }
 ];
 
 const MOCK_STATIONS_DATA = INITIAL_STATIONS;
@@ -234,77 +192,43 @@ const AMENITY_ICONS: Record<AmenityType, React.ReactNode> = {
 };const TankerAnimation = ({ liters, max, fuelType }: { liters: number, max: number, fuelType: string }) => {
   const percentage = Math.min(100, Math.max(0, (liters / max) * 100));
   const isPetrol = fuelType === 'Petrol';
-  const fuelColor = isPetrol ? '#ff4d00' : '#f59e0b'; // Vibrant Petrol Red-Orange, Diesel Amber
+  const fuelColor = isPetrol ? '#FF4500' : '#f59e0b'; // Vibrant Petrol Red-Orange, Diesel Amber
   
   return (
-    <div className="relative w-full max-w-[320px] mx-auto mt-8 mb-12 select-none pr-4 scale-95 sm:scale-110">
-      {/* Truck Chassis Shadow */}
-      <div className="absolute bottom-[-4px] left-4 right-4 h-2 bg-black/10 blur-xl rounded-full" />
-
+    <div className="relative w-full max-w-[200px] mx-auto mt-8 mb-12 select-none scale-100">
       <motion.div 
-        animate={{ y: [0, -1, 0] }}
+        animate={{ y: [0, -2, 0] }}
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-        className="relative"
+        className="relative flex flex-col items-center"
       >
-        {/* The Tanker Body */}
-        <div className="relative w-full h-36 border-[5px] border-gray-900 rounded-[3rem] bg-gray-100 shadow-2xl overflow-hidden flex flex-col justify-end z-20">
-          {/* Metallic Sheen Base */}
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-200 via-white to-gray-300 pointer-events-none" />
+        {/* Bottle Cap */}
+        <div className="w-8 h-6 bg-gray-800 rounded-t-lg border-x-4 border-t-4 border-gray-900 z-10" />
+        
+        {/* Bottle Neck */}
+        <div className="w-16 h-8 bg-gray-200 border-x-4 border-gray-900 -mt-1 z-0" />
+        
+        {/* Bottle Body */}
+        <div className="relative w-40 h-64 border-4 border-gray-900 rounded-b-[3rem] bg-gray-100 shadow-2xl overflow-hidden flex flex-col justify-end z-20">
+          {/* Metallic Sheen */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-gray-300 pointer-events-none" />
           
-          {/* RED EX Logo ON TANK (Always visible) */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
-            <span className="text-[7rem] font-black italic tracking-tighter">RED EX</span>
-          </div>
-
-          {/* Liquid Container */}
+          {/* Fuel/Liquid */}
           <motion.div 
             className="relative w-full overflow-visible"
             animate={{ height: `${percentage}%` }}
-            transition={{ type: "spring", stiffness: 45, damping: 12 }}
+            transition={{ type: "spring", stiffness: 40, damping: 10 }}
           >
-            {/* Wave Layer */}
-            <div className="absolute -top-4 left-0 right-0 h-5 overflow-visible">
-               <motion.div 
-                  className="w-[200%] h-full flex"
-                  animate={{ x: ['0%', '-50%'] }}
-                  transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-               >
-                  <svg className="h-full w-full" preserveAspectRatio="none" viewBox="0 0 1440 320" style={{ fill: fuelColor }}>
-                    <path d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,224C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-                  </svg>
-               </motion.div>
-            </div>
-
-            {/* Solid Liquid */}
+            {/* Liquid */}
             <div className="absolute inset-0 z-10" style={{ backgroundColor: fuelColor }}>
-              {/* Dynamic Highlights of liquid */}
+              {/* Dynamic Highlights */}
               <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-r from-black/20 via-white/30 to-black/20" />
-              <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-repeat" />
             </div>
 
-            {/* Liters Text Overlay (Inside Liquid Mask) */}
-            <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden pb-4">
-              <span className="font-black text-6xl text-white/40">{liters}L</span>
+            {/* Liters Text Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+              <span className="font-black text-2xl text-white/50">{liters}L</span>
             </div>
           </motion.div>
-
-          {/* Tank Straps */}
-          <div className="absolute inset-0 pointer-events-none border-x-[30px] border-black/5" />
-          <div className="absolute left-1/3 top-0 bottom-0 w-3 bg-black/5" />
-          <div className="absolute right-1/3 top-0 bottom-0 w-3 bg-black/5" />
-        </div>
-
-        {/* Tanker Support/Wheels Container */}
-        <div className="flex justify-around px-12 -mt-4 relative z-40">
-           <div className="w-12 h-12 border-4 border-gray-900 bg-gray-800 rounded-full flex items-center justify-center shadow-xl">
-             <div className="w-5 h-5 border-2 border-gray-500 rounded-full flex items-center justify-center"><div className="w-2 h-2 bg-gray-500 rounded-full" /></div>
-           </div>
-           <div className="w-12 h-12 border-4 border-gray-900 bg-gray-800 rounded-full flex items-center justify-center shadow-xl">
-             <div className="w-5 h-5 border-2 border-gray-500 rounded-full flex items-center justify-center"><div className="w-2 h-2 bg-gray-500 rounded-full" /></div>
-           </div>
-           <div className="w-12 h-12 border-4 border-gray-900 bg-gray-800 rounded-full flex items-center justify-center shadow-xl">
-             <div className="w-5 h-5 border-2 border-gray-500 rounded-full flex items-center justify-center"><div className="w-2 h-2 bg-gray-500 rounded-full" /></div>
-           </div>
         </div>
       </motion.div>
     </div>
