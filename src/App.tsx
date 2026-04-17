@@ -231,62 +231,82 @@ const AMENITY_ICONS: Record<AmenityType, React.ReactNode> = {
   'Air Station': <Wind size={18} className="text-gray-500" />,
   'Restroom': <Droplet size={18} className="text-gray-500" />,
   'ATM': <Banknote size={18} className="text-gray-500" />
-};
-
-const TankerAnimation = ({ liters, max, fuelType }: { liters: number, max: number, fuelType: string }) => {
+};const TankerAnimation = ({ liters, max, fuelType }: { liters: number, max: number, fuelType: string }) => {
   const percentage = Math.min(100, Math.max(0, (liters / max) * 100));
   const isPetrol = fuelType === 'Petrol';
-  const fuelColor = isPetrol ? '#ff4500' : '#eab308'; // Red Orange for Petrol, Yellow for Diesel
-
+  const fuelColor = isPetrol ? '#ff4d00' : '#f59e0b'; // Vibrant Petrol Red-Orange, Diesel Amber
+  
   return (
-    <div className="relative w-full max-w-[280px] mx-auto mt-6 mb-8 pl-12 scale-[0.85] sm:scale-100 origin-left select-none">
-      {/* Truck Cab */}
-      <div className="absolute left-0 bottom-3 w-14 h-20 bg-red-600 rounded-l-2xl border-4 border-r-0 border-gray-900 z-20 box-border">
-         {/* Window */}
-         <div className="absolute top-2 left-2 right-0 h-8 bg-blue-100 border-b-4 border-gray-900 rounded-tl shadow-inner" />
-         {/* Headlight */}
-         <div className="absolute bottom-2 left-1 w-3 h-3 bg-yellow-300 rounded-full border-2 border-gray-900" />
-      </div>
+    <div className="relative w-full max-w-[320px] mx-auto mt-8 mb-12 select-none pr-4 scale-95 sm:scale-110">
+      {/* Truck Chassis Shadow */}
+      <div className="absolute bottom-[-4px] left-4 right-4 h-2 bg-black/10 blur-xl rounded-full" />
 
-      {/* Tanker Connector */}
-      <div className="absolute left-10 bottom-5 w-8 h-4 bg-gray-900 z-0"/>
-      
-      {/* Tanker Body */}
-      <div className="relative w-full h-28 border-4 border-gray-900 rounded-[32px] overflow-hidden bg-gray-50 flex flex-col justify-end z-10 shadow-xl">
-        
-        {/* Liquid */}
-        <motion.div 
-          className="relative w-full bg-white"
-          animate={{ height: `${percentage}%` }}
-          transition={{ type: "spring", stiffness: 60, damping: 15 }}
-        >
-          {/* Primary Wave */}
-          <div className="absolute -top-[14px] left-0 right-0 h-[15px] overflow-hidden">
-             <motion.div 
-                className="w-[200%] h-full flex"
-                animate={{ x: ['0%', '-50%'] }}
-                transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-             >
-                <svg className="h-full w-full text-transparent" preserveAspectRatio="none" viewBox="0 0 1440 320" style={{ fill: fuelColor }}>
-                  <path d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,224C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-                </svg>
-             </motion.div>
+      <motion.div 
+        animate={{ y: [0, -1, 0] }}
+        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+        className="relative"
+      >
+        {/* The Tanker Body */}
+        <div className="relative w-full h-36 border-[5px] border-gray-900 rounded-[3rem] bg-gray-100 shadow-2xl overflow-hidden flex flex-col justify-end z-20">
+          {/* Metallic Sheen Base */}
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-200 via-white to-gray-300 pointer-events-none" />
+          
+          {/* RED EX Logo ON TANK (Always visible) */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
+            <span className="text-[7rem] font-black italic tracking-tighter">RED EX</span>
           </div>
 
-          <div className="absolute inset-0 z-10" style={{ backgroundColor: fuelColor }}></div>
-          <div className="absolute inset-0 opacity-20 bg-gradient-to-t from-black/50 to-transparent z-20" />
-        </motion.div>
+          {/* Liquid Container */}
+          <motion.div 
+            className="relative w-full overflow-visible"
+            animate={{ height: `${percentage}%` }}
+            transition={{ type: "spring", stiffness: 45, damping: 12 }}
+          >
+            {/* Wave Layer */}
+            <div className="absolute -top-4 left-0 right-0 h-5 overflow-visible">
+               <motion.div 
+                  className="w-[200%] h-full flex"
+                  animate={{ x: ['0%', '-50%'] }}
+                  transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+               >
+                  <svg className="h-full w-full" preserveAspectRatio="none" viewBox="0 0 1440 320" style={{ fill: fuelColor }}>
+                    <path d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,149.3C672,149,768,203,864,224C960,245,1056,235,1152,213.3C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                  </svg>
+               </motion.div>
+            </div>
 
-        {/* Liters Text Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none drop-shadow-md">
-          <span className="font-black text-5xl text-white/50 mix-blend-overlay">{liters}L</span>
+            {/* Solid Liquid */}
+            <div className="absolute inset-0 z-10" style={{ backgroundColor: fuelColor }}>
+              {/* Dynamic Highlights of liquid */}
+              <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-r from-black/20 via-white/30 to-black/20" />
+              <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-repeat" />
+            </div>
+
+            {/* Liters Text Overlay (Inside Liquid Mask) */}
+            <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none overflow-hidden pb-4">
+              <span className="font-black text-6xl text-white/40">{liters}L</span>
+            </div>
+          </motion.div>
+
+          {/* Tank Straps */}
+          <div className="absolute inset-0 pointer-events-none border-x-[30px] border-black/5" />
+          <div className="absolute left-1/3 top-0 bottom-0 w-3 bg-black/5" />
+          <div className="absolute right-1/3 top-0 bottom-0 w-3 bg-black/5" />
         </div>
-      </div>
 
-      {/* Wheels */}
-      <div className="absolute left-2 -bottom-2 w-8 h-8 border-4 border-gray-900 bg-gray-300 rounded-full z-30 flex items-center justify-center shadow-md"><div className="w-2 h-2 bg-gray-900 rounded-full"/></div>
-      <div className="absolute right-5 -bottom-2 w-8 h-8 border-4 border-gray-900 bg-gray-300 rounded-full z-30 flex items-center justify-center shadow-md"><div className="w-2 h-2 bg-gray-900 rounded-full"/></div>
-      <div className="absolute right-16 -bottom-2 w-8 h-8 border-4 border-gray-900 bg-gray-300 rounded-full z-30 flex items-center justify-center shadow-md"><div className="w-2 h-2 bg-gray-900 rounded-full"/></div>
+        {/* Tanker Support/Wheels Container */}
+        <div className="flex justify-around px-12 -mt-4 relative z-40">
+           <div className="w-12 h-12 border-4 border-gray-900 bg-gray-800 rounded-full flex items-center justify-center shadow-xl">
+             <div className="w-5 h-5 border-2 border-gray-500 rounded-full flex items-center justify-center"><div className="w-2 h-2 bg-gray-500 rounded-full" /></div>
+           </div>
+           <div className="w-12 h-12 border-4 border-gray-900 bg-gray-800 rounded-full flex items-center justify-center shadow-xl">
+             <div className="w-5 h-5 border-2 border-gray-500 rounded-full flex items-center justify-center"><div className="w-2 h-2 bg-gray-500 rounded-full" /></div>
+           </div>
+           <div className="w-12 h-12 border-4 border-gray-900 bg-gray-800 rounded-full flex items-center justify-center shadow-xl">
+             <div className="w-5 h-5 border-2 border-gray-500 rounded-full flex items-center justify-center"><div className="w-2 h-2 bg-gray-500 rounded-full" /></div>
+           </div>
+        </div>
+      </motion.div>
     </div>
   );
 };
@@ -426,7 +446,7 @@ export default function App() {
   const estimatedRange = selectedVehicle ? liters * selectedVehicle.efficiency : 0;
 
   return (
-    <div className="bg-white min-h-screen text-gray-900 font-sans pb-24 selection:bg-red-100 selection:text-red-900 relative">
+    <div className="bg-white min-h-screen text-gray-900 font-sans pb-24 selection:bg-red-100 selection:text-red-900 relative select-none">
       <AnimatePresence>
         {showSplash && (
           <motion.div 
@@ -439,7 +459,7 @@ export default function App() {
               initial={{ x: -window.innerWidth }}
               animate={{ x: window.innerWidth }}
               transition={{ duration: 2, ease: "linear", repeat: Infinity }}
-              className="text-white drop-shadow-lg mb-2"
+              className="text-white drop-shadow-lg mb-6"
             >
               <Car size={120} strokeWidth={1} />
             </motion.div>
@@ -586,16 +606,22 @@ export default function App() {
                     
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-gray-50 relative z-10">
                       {/* Fuels */}
-                      <div className="flex gap-2.5">
+                      <div className="flex flex-wrap gap-2 pt-1 transition-all">
                         {station.fuels.map(f => (
-                          <div key={f.type} className={`flex items-center bg-gray-50 px-2.5 py-1.5 rounded-xl border border-gray-100 ${!f.available ? 'opacity-50 grayscale' : ''}`}>
-                            <div className="w-6 h-6 rounded-lg bg-white flex items-center justify-center shadow-sm mr-2 relative">
-                               <Droplet size={12} style={{ color: f.type === 'Petrol' ? '#ff4500' : '#eab308' }} className="fill-current opacity-20 absolute top-[7px]" />
-                               <Droplet size={12} style={{ color: f.type === 'Petrol' ? '#ff4500' : '#eab308' }} className="relative z-10" />
+                          <div key={f.type} className={`flex items-center bg-gray-50 px-2.5 py-1.5 rounded-xl border border-gray-100 ${!f.available ? 'opacity-50 grayscale' : ''} hover:bg-white hover:shadow-sm transition-all`}>
+                            <div className="w-6 h-6 rounded-lg bg-white flex items-center justify-center shadow-sm mr-2 flex-shrink-0 relative">
+                               {f.type === 'EV Wireless' ? (
+                                  <Zap size={11} className="text-red-500 fill-current" />
+                               ) : (
+                                  <>
+                                    <Droplet size={11} style={{ color: f.type === 'Petrol' ? '#ff4500' : '#eab308' }} className="fill-current opacity-20 absolute top-[6px]" />
+                                    <Droplet size={11} style={{ color: f.type === 'Petrol' ? '#ff4500' : '#eab308' }} className="relative z-10" />
+                                  </>
+                               )}
                             </div>
-                            <div>
-                               <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{f.type}</div>
-                               <div className="font-bold text-gray-900 text-sm leading-none">৳{f.pricePerLiter}</div>
+                            <div className="flex flex-col">
+                               <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none">{f.type === 'EV Wireless' ? 'EV Wireless' : f.type}</div>
+                               <div className="font-bold text-gray-900 text-[12px] mt-0.5 leading-none">৳{f.pricePerLiter}</div>
                             </div>
                           </div>
                         ))}
@@ -850,15 +876,16 @@ export default function App() {
                 </div>
 
                 {/* Quick Booking for Charging Slot */}
-                <div className="mt-6 p-4 bg-indigo-600 rounded-3xl shadow-lg border border-indigo-400/30 flex items-center justify-between group overflow-hidden relative">
-                   <div className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-indigo-600 -z-0"></div>
+                <div className="mt-6 p-5 bg-red-600 rounded-3xl shadow-xl border border-red-500 flex flex-col sm:flex-row items-center justify-between gap-4 group overflow-hidden relative">
+                   <div className="absolute inset-0 bg-red-600 -z-0"></div>
                    <div className="absolute top-0 right-0 p-3 opacity-20 transform translate-x-4 -translate-y-2 group-hover:scale-110 transition-transform">
-                      <Zap size={80} />
+                      <Zap size={80} className="text-white" />
                    </div>
-                   <div className="relative z-10">
-                      <div className="text-indigo-100 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Ultra-Fast Service</div>
-                      <div className="text-white font-bold text-lg flex items-center gap-2">
-                         Wireless Charging Slot <span className="bg-indigo-400/40 text-xs px-2 py-0.5 rounded-full border border-indigo-300/30">Available</span>
+                   <div className="relative z-10 w-full sm:w-auto text-center sm:text-left">
+                      <div className="text-white/80 text-[10px] font-black uppercase tracking-[0.25em] mb-1.5">Ultra-Fast Service</div>
+                      <div className="text-white font-bold text-lg flex flex-col sm:flex-row items-center gap-2">
+                         <span>Wireless Charging Slot</span>
+                         <span className="bg-white text-red-600 shadow-sm text-[10px] px-2.5 py-1 rounded-full border border-white uppercase tracking-wider font-black">Available</span>
                       </div>
                    </div>
                    <button 
@@ -868,7 +895,7 @@ export default function App() {
                         const orderSection = document.getElementById('order-section');
                         if (orderSection) orderSection.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className="bg-white text-indigo-700 font-black px-5 py-3 rounded-2xl shadow-xl hover:bg-indigo-50 active:scale-95 transition-all relative z-10 text-sm"
+                      className="w-full sm:w-auto bg-white text-red-600 font-extrabold px-8 py-4 rounded-2xl shadow-xl hover:bg-gray-100 active:scale-95 transition-all relative z-10 text-sm whitespace-nowrap"
                    >
                       Book Now
                    </button>
@@ -918,19 +945,29 @@ export default function App() {
                             key={fuel.type}
                             disabled={!fuel.available}
                             onClick={() => handleFuelSelect(fuel)}
-                            className={`p-4 rounded-xl border text-left flex flex-col transition-all outline-none ${
+                            className={`p-4 rounded-2xl border text-left flex flex-col transition-all outline-none relative overflow-hidden ${
                               !fuel.available 
                                 ? 'opacity-50 cursor-not-allowed bg-gray-50 border-gray-100' 
                                 : isSelected 
-                                  ? 'border-red-600 bg-red-50 ring-1 ring-red-600' 
-                                  : 'border-gray-200 bg-white hover:border-red-300'
+                                  ? 'border-red-600 bg-red-50 ring-2 ring-red-600 shadow-md' 
+                                  : 'border-gray-200 bg-white hover:border-red-300 shadow-sm'
                             }`}
                           >
-                            <span className="font-bold text-lg">{fuel.type}</span>
-                            <span className="text-sm text-gray-500 font-medium mt-1">
-                              <span className="text-gray-900">৳{fuel.pricePerLiter.toFixed(2)}</span> / {fuel.type === 'EV Wireless' ? 'kWh' : 'L'}
-                            </span>
-                            {!fuel.available && <span className="text-xs text-red-500 font-bold mt-2">Currently Unavailable</span>}
+                             <div className="flex items-center justify-between w-full mb-3">
+                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isSelected ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                   {fuel.type === 'EV Wireless' ? <Zap size={16} className={isSelected ? 'fill-current' : ''} /> : <Droplet size={16} className={isSelected ? 'fill-current' : ''} />}
+                                </div>
+                                {isSelected && <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />}
+                                {!fuel.available && <span className="text-[8px] font-black text-red-600 bg-red-100 px-1.5 py-0.5 rounded uppercase">Out</span>}
+                             </div>
+                             
+                             <div className="space-y-0.5">
+                                <div className={`font-black text-sm uppercase tracking-tight ${isSelected ? 'text-red-900' : 'text-gray-900'}`}>{fuel.type}</div>
+                                <div className="flex items-baseline gap-1">
+                                   <span className={`text-lg font-black ${isSelected ? 'text-red-600' : 'text-gray-900'}`}>৳{fuel.pricePerLiter}</span>
+                                   <span className={`text-[10px] font-bold uppercase tracking-widest ${isSelected ? 'text-red-700/60' : 'text-gray-400'}`}>/ {fuel.type === 'EV Wireless' ? 'kWh' : 'L'}</span>
+                                </div>
+                             </div>
                           </button>
                         );
                       })}
@@ -1084,13 +1121,27 @@ export default function App() {
                           <div className="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">Estimated Total</div>
                           <div className="text-4xl font-black text-gray-900 tracking-tight">৳{orderTotal}</div>
                         </div>
-                        <button 
+                        <motion.button 
                           onClick={handleProceedToCheckout}
                           disabled={isProcessingCheckout}
-                          className={`w-full sm:w-auto bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold py-3.5 px-8 rounded-xl shadow-md hover:shadow-lg transition-all focus:ring-4 focus:ring-red-100 ${isProcessingCheckout ? 'opacity-70 pointer-events-none' : ''}`}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.95 }}
+                          layout
+                          className={`w-full sm:w-auto bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold py-3.5 px-8 rounded-xl shadow-md hover:shadow-lg transition-all focus:ring-4 focus:ring-red-100 flex items-center justify-center gap-2 overflow-hidden ${isProcessingCheckout ? 'opacity-70 pointer-events-none' : ''}`}
                         >
-                          {selectedFuel.type === 'EV Wireless' ? 'Reserve Slot & Pay' : 'Proceed to Checkout'}
-                        </button>
+                          {isProcessingCheckout ? (
+                            <>
+                              <motion.div 
+                                animate={{ rotate: 360 }}
+                                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                                className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                              />
+                              <span>Processing...</span>
+                            </>
+                          ) : (
+                            <span>{selectedFuel.type === 'EV Wireless' ? 'Reserve Slot & Pay' : 'Proceed to Checkout'}</span>
+                          )}
+                        </motion.button>
                       </div>
                     </motion.div>
                   )}
@@ -1178,13 +1229,31 @@ export default function App() {
               </div>
 
               <div className="pt-6">
-                <button 
+                <motion.button 
                   onClick={handleConfirmPayment}
                   disabled={isProcessingPayment}
-                  className={`w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold text-lg py-4 rounded-xl shadow-md hover:shadow-lg transition-all focus:ring-4 focus:ring-red-100 flex justify-center items-center ${isProcessingPayment ? 'opacity-70 pointer-events-none' : ''}`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.95 }}
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold text-lg py-4 rounded-xl shadow-md hover:shadow-lg transition-all focus:ring-4 focus:ring-red-100 flex justify-center items-center gap-2 overflow-hidden ${isProcessingPayment ? 'opacity-70 pointer-events-none' : ''}`}
                 >
-                  Confirm & Pay <span className="opacity-90 ml-2 bg-red-700/50 px-2 py-0.5 rounded-md text-sm">৳{orderTotal}</span>
-                </button>
+                  {isProcessingPayment ? (
+                    <>
+                      <motion.div 
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                        className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                      />
+                      <span>Processing Payment...</span>
+                    </>
+                  ) : (
+                    <>
+                      Confirm & Pay <span className="opacity-90 ml-2 bg-red-700/50 px-2 py-0.5 rounded-md text-sm">৳{orderTotal}</span>
+                    </>
+                  )}
+                </motion.button>
                 <p className="text-center text-xs font-medium text-gray-500 mt-4 flex items-center justify-center">
                   <Info size={14} className="mr-1.5 text-gray-400" />
                   Payments are secure and encrypted.
