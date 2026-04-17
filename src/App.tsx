@@ -25,7 +25,10 @@ import {
   Minus,
   LocateFixed,
   Camera,
-  ChevronRight
+  ChevronRight,
+  Zap,
+  BatteryCharging,
+  Clock
 } from 'lucide-react';
 
 // --- MAP COMPONENTS ---
@@ -84,11 +87,18 @@ const DIESEL_VEHICLES: VehicleOption[] = [
   { id: 'd5', label: 'Large/Premium SUV', maxLiters: 80, examples: 'Toyota Fortuner, Thar', efficiency: 12 },
 ];
 
+const EV_VEHICLES: VehicleOption[] = [
+  { id: 'e1', label: 'Tesla Model 3', maxLiters: 80, examples: 'Standard Range, Long Range', efficiency: 6.5 },
+  { id: 'e2', label: 'Tesla Model Y', maxLiters: 85, examples: 'AWD, Performance', efficiency: 5.8 },
+  { id: 'e3', label: 'AutoCar EV', maxLiters: 100, examples: 'Premium EV Sedan', efficiency: 5.2 },
+  { id: 'e4', label: 'BYD Atto 3', maxLiters: 60, examples: 'Electric SUV', efficiency: 6.2 },
+];
+
 // --- TYPES ---
 type PaymentMethod = 'Credit Card' | 'bKash' | 'Pay at Station';
 
 // --- DATA MODELS ---
-type FuelType = 'Petrol' | 'Diesel';
+type FuelType = 'Petrol' | 'Diesel' | 'EV Wireless';
 type AmenityType = 'Convenience Store' | 'Car Wash' | 'Air Station' | 'Restroom' | 'ATM';
 
 interface FuelDetail {
@@ -121,7 +131,8 @@ const INITIAL_STATIONS: Station[] = [
     amenities: ['Convenience Store', 'Air Station', 'Restroom'],
     fuels: [
       { type: 'Petrol', pricePerLiter: 125, available: true },
-      { type: 'Diesel', pricePerLiter: 109, available: true }
+      { type: 'Diesel', pricePerLiter: 109, available: true },
+      { type: 'EV Wireless', pricePerLiter: 22, available: true }
     ]
   },
   {
@@ -134,7 +145,8 @@ const INITIAL_STATIONS: Station[] = [
     amenities: ['Car Wash', 'Convenience Store', 'Restroom', 'ATM'],
     fuels: [
       { type: 'Petrol', pricePerLiter: 125, available: true },
-      { type: 'Diesel', pricePerLiter: 109, available: false }
+      { type: 'Diesel', pricePerLiter: 109, available: false },
+      { type: 'EV Wireless', pricePerLiter: 20, available: true }
     ]
   },
   {
@@ -147,7 +159,8 @@ const INITIAL_STATIONS: Station[] = [
     amenities: ['Air Station', 'Convenience Store'],
     fuels: [
       { type: 'Petrol', pricePerLiter: 125, available: true },
-      { type: 'Diesel', pricePerLiter: 109, available: true }
+      { type: 'Diesel', pricePerLiter: 109, available: true },
+      { type: 'EV Wireless', pricePerLiter: 22, available: true }
     ]
   },
   {
@@ -160,7 +173,8 @@ const INITIAL_STATIONS: Station[] = [
     amenities: ['ATM', 'Car Wash', 'Restroom'],
     fuels: [
       { type: 'Petrol', pricePerLiter: 125, available: true },
-      { type: 'Diesel', pricePerLiter: 109, available: true }
+      { type: 'Diesel', pricePerLiter: 109, available: true },
+      { type: 'EV Wireless', pricePerLiter: 24, available: true }
     ]
   }
 ];
@@ -168,12 +182,16 @@ const INITIAL_STATIONS: Station[] = [
 const MOCK_STATIONS_DATA = INITIAL_STATIONS;
 
 const getCustomMarkerIcon = (station: Station) => {
+  const hasEV = station.fuels.some(f => f.type === 'EV Wireless' && f.available);
   const price = station.fuels[0]?.pricePerLiter || 0;
   return new L.DivIcon({
     className: 'custom-div-icon',
     html: `
-      <div style="background-color: #dc2626; color: white; padding: 4px 10px; border-radius: 9999px; font-weight: 800; font-size: 13px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4); border: 2px solid white; display: flex; align-items: center; gap: 4px; pointer-events: auto; white-space: nowrap;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 22 4-4"/><path d="M19 14v4.5a2.5 2.5 0 0 1-5 0V7a2 2 0 0 0-4 0v11"/><path d="M11 7V5.5a2.5 2.5 0 0 1 5 0V11"/><path d="M6 7h1v4.5a2.5 2.5 0 0 1-5 0V7c0-2 2-2 2-2h4c1 0 2 1 2 2v2H6Z"/></svg>
+      <div style="background-color: ${hasEV ? '#4f46e5' : '#dc2626'}; color: white; padding: 4px 10px; border-radius: 9999px; font-weight: 800; font-size: 13px; box-shadow: 0 4px 12px ${hasEV ? 'rgba(79, 70, 229, 0.4)' : 'rgba(220, 38, 38, 0.4)'}; border: 2px solid white; display: flex; align-items: center; gap: 4px; pointer-events: auto; white-space: nowrap;">
+        ${hasEV 
+          ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'
+          : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 22 4-4"/><path d="M19 14v4.5a2.5 2.5 0 0 1-5 0V7a2 2 0 0 0-4 0v11"/><path d="M11 7V5.5a2.5 2.5 0 0 1 5 0V11"/><path d="M6 7h1v4.5a2.5 2.5 0 0 1-5 0V7c0-2 2-2 2-2h4c1 0 2 1 2 2v2H6Z"/></svg>'
+        }
         <span>৳${price}</span>
       </div>
     `,
@@ -340,12 +358,14 @@ export default function App() {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [tempProfile, setTempProfile] = useState(userProfile);
   const [showProfileAlert, setShowProfileAlert] = useState(false);
+  const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   // Handlers
   const handleFuelSelect = (fuel: FuelDetail) => {
     if (!fuel.available) return;
     setSelectedFuel(fuel);
-    const vehicles = fuel.type === 'Petrol' ? PETROL_VEHICLES : DIESEL_VEHICLES;
+    const vehicles = fuel.type === 'Petrol' ? PETROL_VEHICLES : fuel.type === 'EV Wireless' ? EV_VEHICLES : DIESEL_VEHICLES;
     setSelectedVehicle(vehicles[0]);
     setLiters(Math.min(liters, vehicles[0].maxLiters));
   };
@@ -376,13 +396,22 @@ export default function App() {
     
     setShowProfileAlert(false);
     if (selectedFuel && selectedFuel.available && liters > 0) {
-      setCurrentView('checkout');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsProcessingCheckout(true);
+      setTimeout(() => {
+        setIsProcessingCheckout(false);
+        setCurrentView('checkout');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 2000);
     }
   };
 
   const handleConfirmPayment = () => {
-    setCurrentView('success');
+    setIsProcessingPayment(true);
+    setTimeout(() => {
+      setIsProcessingPayment(false);
+      setCurrentView('success');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 2000);
   };
 
   const resetApp = () => {
@@ -420,13 +449,62 @@ export default function App() {
                transition={{ delay: 0.3, duration: 0.5 }}
                className="text-center"
             >
-               <h1 className="text-white font-black text-6xl tracking-tight mb-2 drop-shadow-md">RedEx</h1>
-               <div className="flex gap-2 justify-center mt-4 drop-shadow-sm">
+               <h1 className="text-white font-black text-7xl tracking-tighter mb-2 drop-shadow-xl italic">RED<span className="opacity-80">EX</span></h1>
+               <span className="text-[10px] font-black text-white/90 tracking-[0.4em] uppercase mt-4 block drop-shadow-sm">Global Logistics & Express Solutions</span>
+               <div className="flex gap-2 justify-center mt-12 drop-shadow-sm">
                  <motion.div className="w-3 h-3 bg-white rounded-full" animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, delay: 0 }} />
                  <motion.div className="w-3 h-3 bg-white rounded-full" animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, delay: 0.2 }} />
                  <motion.div className="w-3 h-3 bg-white rounded-full" animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, delay: 0.4 }} />
                </div>
             </motion.div>
+          </motion.div>
+        )}
+        
+        {/* Loading Overlay Checkout */}
+        {isProcessingCheckout && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-white/80 backdrop-blur-sm z-[9999] flex flex-col items-center justify-center"
+          >
+            <motion.div
+               animate={{ scale: [1, 1.1, 1] }}
+               transition={{ duration: 1.5, repeat: Infinity }}
+               className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white mb-4 shadow-lg shadow-red-200"
+            >
+               {selectedFuel?.type === 'EV Wireless' ? <Zap size={32} /> : <Droplet size={32} />}
+            </motion.div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Preparing {selectedFuel?.type === 'EV Wireless' ? 'Slot' : 'Order'}...</h2>
+            <div className="flex gap-1.5">
+              <motion.div className="w-2 h-2 bg-red-600 rounded-full" animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, delay: 0 }} />
+              <motion.div className="w-2 h-2 bg-red-600 rounded-full" animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, delay: 0.15 }} />
+              <motion.div className="w-2 h-2 bg-red-600 rounded-full" animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, delay: 0.3 }} />
+            </div>
+          </motion.div>
+        )}
+
+        {/* Loading Overlay Payment */}
+        {isProcessingPayment && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-white/80 backdrop-blur-sm z-[9999] flex flex-col items-center justify-center"
+          >
+            <motion.div
+               animate={{ rotateY: 360 }}
+               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+               className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white mb-4 shadow-lg shadow-green-200"
+            >
+               <CheckCircle size={32} />
+            </motion.div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Processing Payment...</h2>
+            <div className="flex gap-1.5">
+              <motion.div className="w-2 h-2 bg-green-500 rounded-full" animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, delay: 0 }} />
+              <motion.div className="w-2 h-2 bg-green-500 rounded-full" animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, delay: 0.15 }} />
+              <motion.div className="w-2 h-2 bg-green-500 rounded-full" animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, delay: 0.3 }} />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -443,10 +521,12 @@ export default function App() {
               <ChevronLeft size={24} className="text-gray-700" />
             </button>
           )}
-          <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center shadow-sm">
-            <Fuel size={20} className="text-white relative top-[1px] right-[1px]" />
+          <div onClick={() => { setMainTab('home'); setCurrentView('stations'); }} className="flex items-center gap-2 cursor-pointer">
+            <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center shadow-sm">
+              <Fuel size={20} className="text-white relative top-[1px] right-[1px]" />
+            </div>
+            <span className="font-black text-xl tracking-tighter text-gray-900 italic uppercase">Red<span className="text-red-600">Ex</span></span>
           </div>
-          <span className="font-bold text-xl tracking-tight text-gray-900">RedEx</span>
         </div>
         
         {/* User avatar handling */}
@@ -768,6 +848,31 @@ export default function App() {
                   <Navigation size={14} className="mr-1" />
                   <span className="text-red-600 font-semibold">{selectedStation.distance}</span>
                 </div>
+
+                {/* Quick Booking for Charging Slot */}
+                <div className="mt-6 p-4 bg-indigo-600 rounded-3xl shadow-lg border border-indigo-400/30 flex items-center justify-between group overflow-hidden relative">
+                   <div className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-indigo-600 -z-0"></div>
+                   <div className="absolute top-0 right-0 p-3 opacity-20 transform translate-x-4 -translate-y-2 group-hover:scale-110 transition-transform">
+                      <Zap size={80} />
+                   </div>
+                   <div className="relative z-10">
+                      <div className="text-indigo-100 text-[10px] font-black uppercase tracking-[0.2em] mb-1">Ultra-Fast Service</div>
+                      <div className="text-white font-bold text-lg flex items-center gap-2">
+                         Wireless Charging Slot <span className="bg-indigo-400/40 text-xs px-2 py-0.5 rounded-full border border-indigo-300/30">Available</span>
+                      </div>
+                   </div>
+                   <button 
+                      onClick={() => {
+                        const evFuel = selectedStation.fuels.find(f => f.type === 'EV Wireless');
+                        if (evFuel) handleFuelSelect(evFuel);
+                        const orderSection = document.getElementById('order-section');
+                        if (orderSection) orderSection.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="bg-white text-indigo-700 font-black px-5 py-3 rounded-2xl shadow-xl hover:bg-indigo-50 active:scale-95 transition-all relative z-10 text-sm"
+                   >
+                      Book Now
+                   </button>
+                </div>
               </div>
 
               {/* Amenities Section */}
@@ -786,13 +891,20 @@ export default function App() {
               </div>
 
               {/* Fuel Ordering Section */}
-              <div className="bg-white border text-gray-900 border-gray-200 rounded-2xl p-6 shadow-sm">
+              <div id="order-section" className="bg-white border text-gray-900 border-gray-200 rounded-2xl p-6 shadow-sm">
                 <h3 className="text-xl font-bold mb-5 flex items-center">
                   <span className="bg-red-50 text-red-600 p-1.5 rounded-lg mr-2">
-                    <Droplet size={20} />
+                    {selectedFuel?.type === 'EV Wireless' ? <Zap size={20} /> : <Droplet size={20} />}
                   </span>
-                  Order Fuel
+                  {selectedFuel?.type === 'EV Wireless' ? 'Book Charging Slot' : 'Order Fuel'}
                 </h3>
+                
+                {selectedFuel?.type === 'EV Wireless' && (
+                   <div className="mb-5 bg-red-50 border border-red-100 rounded-xl p-3 flex items-center justify-center gap-2">
+                      <BatteryCharging size={18} className="text-red-600" />
+                      <span className="text-sm font-bold text-red-700">Ultra-Fast 150kW Wireless Charging</span>
+                   </div>
+                )}
                 
                 <div className="space-y-6">
                   {/* Fuel Type Selector */}
@@ -816,7 +928,7 @@ export default function App() {
                           >
                             <span className="font-bold text-lg">{fuel.type}</span>
                             <span className="text-sm text-gray-500 font-medium mt-1">
-                              <span className="text-gray-900">৳{fuel.pricePerLiter.toFixed(2)}</span> / L
+                              <span className="text-gray-900">৳{fuel.pricePerLiter.toFixed(2)}</span> / {fuel.type === 'EV Wireless' ? 'kWh' : 'L'}
                             </span>
                             {!fuel.available && <span className="text-xs text-red-500 font-bold mt-2">Currently Unavailable</span>}
                           </button>
@@ -833,7 +945,7 @@ export default function App() {
                       <div>
                         <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider text-[11px]">2. Select Vehicle Type</label>
                         <div className="flex overflow-x-auto gap-3 pb-2 -mx-2 px-2 snap-x hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                          {(selectedFuel.type === 'Petrol' ? PETROL_VEHICLES : DIESEL_VEHICLES).map(vehicle => {
+                          {(selectedFuel.type === 'Petrol' ? PETROL_VEHICLES : selectedFuel.type === 'EV Wireless' ? EV_VEHICLES : DIESEL_VEHICLES).map(vehicle => {
                             const isSelected = selectedVehicle.id === vehicle.id;
                             return (
                               <button
@@ -850,7 +962,7 @@ export default function App() {
                               >
                                 <span className={`font-bold text-sm leading-tight ${isSelected ? 'text-red-900' : 'text-gray-700'}`}>{vehicle.label}</span>
                                 <span className={`text-[10px] mt-1 line-clamp-2 leading-tight flex-1 ${isSelected ? 'text-red-700/80' : 'text-gray-500'}`}>{vehicle.examples}</span>
-                                <span className={`text-xs font-bold mt-2 ${isSelected ? 'text-red-600' : 'text-gray-400'}`}>Max {vehicle.maxLiters}L</span>
+                                <span className={`text-xs font-bold mt-2 ${isSelected ? 'text-red-600' : 'text-gray-400'}`}>Max {vehicle.maxLiters}{selectedFuel.type === 'EV Wireless' ? 'kWh' : 'L'}</span>
                               </button>
                             );
                           })}
@@ -858,10 +970,27 @@ export default function App() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider text-[11px]">3. Quantity (Liters)</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider text-[11px]">3. {selectedFuel.type === 'EV Wireless' ? 'Capacity (kWh)' : 'Quantity (Liters)'}</label>
                         
                         {/* Interactive Fuel Tanker Animation */}
-                        <TankerAnimation liters={liters} max={selectedVehicle.maxLiters} fuelType={selectedFuel.type} />
+                        {selectedFuel.type !== 'EV Wireless' ? (
+                          <TankerAnimation liters={liters} max={selectedVehicle.maxLiters} fuelType={selectedFuel.type} />
+                        ) : (
+                          <div className="w-full bg-gradient-to-br from-red-600 to-red-500 rounded-[32px] p-6 shadow-lg flex flex-col items-center justify-center text-white relative overflow-hidden mb-6">
+                             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                             <div className="absolute top-0 right-10 bottom-0 flex items-center opacity-20">
+                               <Zap size={100} strokeWidth={1} />
+                             </div>
+                             <div className="relative z-10 flex flex-col items-center mt-2">
+                                <BatteryCharging size={36} className="mb-2 animate-pulse" />
+                                <span className="font-black text-4xl">{liters} kWh</span>
+                             </div>
+                             <div className="mt-5 pt-4 border-t border-white/20 w-full text-center relative z-10 pb-1">
+                                <span className="text-[10px] uppercase tracking-[0.2em] font-black text-white/70 block mb-1">Technology Powered by</span>
+                                <div className="text-sm font-black text-white tracking-wide">Prangon / rean / ifaz</div>
+                             </div>
+                          </div>
+                        )}
 
                         <div className="bg-white p-2 rounded-3xl border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mt-6">
                           <div className="flex items-center justify-between mt-1 px-1">
@@ -874,7 +1003,7 @@ export default function App() {
 
                             <div className="flex-1 flex flex-col items-center justify-center relative">
                                <div className="text-5xl font-black text-gray-900 tracking-tighter">{liters}</div>
-                               <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5 relative -top-1">Liters</div>
+                               <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5 relative -top-1">{selectedFuel.type === 'EV Wireless' ? 'kWh' : 'Liters'}</div>
                             </div>
                             
                             <button 
@@ -896,8 +1025,8 @@ export default function App() {
                               className="w-full accent-red-600 h-2.5 bg-gray-100 rounded-full appearance-none cursor-pointer"
                             />
                             <div className="flex justify-between mt-3 px-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                              <span>1L</span>
-                              <span>{selectedVehicle.maxLiters}L</span>
+                              <span>1{selectedFuel.type === 'EV Wireless' ? 'kWh' : 'L'}</span>
+                              <span>{selectedVehicle.maxLiters}{selectedFuel.type === 'EV Wireless' ? 'kWh' : 'L'}</span>
                             </div>
                           </div>
                         </div>
@@ -957,9 +1086,10 @@ export default function App() {
                         </div>
                         <button 
                           onClick={handleProceedToCheckout}
-                          className="w-full sm:w-auto bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold py-3.5 px-8 rounded-xl shadow-md hover:shadow-lg transition-all focus:ring-4 focus:ring-red-100"
+                          disabled={isProcessingCheckout}
+                          className={`w-full sm:w-auto bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold py-3.5 px-8 rounded-xl shadow-md hover:shadow-lg transition-all focus:ring-4 focus:ring-red-100 ${isProcessingCheckout ? 'opacity-70 pointer-events-none' : ''}`}
                         >
-                          Proceed to Checkout
+                          {selectedFuel.type === 'EV Wireless' ? 'Reserve Slot & Pay' : 'Proceed to Checkout'}
                         </button>
                       </div>
                     </motion.div>
@@ -1050,7 +1180,8 @@ export default function App() {
               <div className="pt-6">
                 <button 
                   onClick={handleConfirmPayment}
-                  className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold text-lg py-4 rounded-xl shadow-md hover:shadow-lg transition-all focus:ring-4 focus:ring-red-100 flex justify-center items-center"
+                  disabled={isProcessingPayment}
+                  className={`w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-bold text-lg py-4 rounded-xl shadow-md hover:shadow-lg transition-all focus:ring-4 focus:ring-red-100 flex justify-center items-center ${isProcessingPayment ? 'opacity-70 pointer-events-none' : ''}`}
                 >
                   Confirm & Pay <span className="opacity-90 ml-2 bg-red-700/50 px-2 py-0.5 rounded-md text-sm">৳{orderTotal}</span>
                 </button>
